@@ -8,6 +8,7 @@
 		<id name="id">
 			<generator class="assigned"/>
 		</id>
+		<!-- 乐观锁设置的version字段，数据库中也需重新添加  -->
 		<version name="version"></version>
 		<property name="name"/>
 		<property name="age"/>

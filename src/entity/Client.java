@@ -13,27 +13,46 @@ public class Client {
 		ServiceRegistry registry = new ServiceRegistryBuilder().applySettings(cfg.getProperties()).buildServiceRegistry();
 		SessionFactory factory = cfg.buildSessionFactory(registry);
 		
-		Session session = null;
+		Session session1 = null;
+		Session session2 = null;
 		try {
-			session = factory.openSession();
-			//Transaction trs = session.beginTransaction();
-			session.getTransaction().begin();
+			session1 = factory.openSession();
+			session2 = factory.openSession();
 			
-			User user = new User();
-			user.setId(102);
-			user.setName("Redick");
-			user.setAge(34);
+			//User user2 = (User) session2.load(User.class, 102);
+			Transaction trs1 = session1.getTransaction();
+			Transaction trs2 = session2.getTransaction();
 			
-			session.save(user);
-			//trs.commit();
-			session.getTransaction().commit();
-			System.out.println("插入记录成功！");
+			trs1.begin();
+			User user1 = (User) session1.load(User.class, 101);
+			User user2 = (User) session2.load(User.class, 101);
+			user1.setName("XXXX111");
+			System.out.println("trs1 version: "+user1.getVersion());
+			
+			
+			trs2.begin();
+			
+			user2.setName("YYYYY222");
+			System.out.println("trs2 version: "+user2.getVersion());
+			
+			trs1.commit();
+			trs2.commit();
+			
+
+			session1.close();
+			session2.close();
+			
+			System.out.println("成功！");
 		} catch(Exception e) {
-			System.out.println("插入记录发生错误！");
-			session.getTransaction().rollback();
+			System.out.println("发生错误！");
+			session1.getTransaction().rollback();
+			session2.getTransaction().rollback();
 		} finally {
-			if(session != null && session.isOpen()) {
-				session.close();
+			if(session1 != null && session1.isOpen()) {
+				session1.close();
+			}
+			if(session2 != null && session2.isOpen()) {
+				session2.close();
 			}
 		}
 	}

@@ -5,7 +5,7 @@ public class User {
 	private String name;
 	private int age;
 	
-	//乐观锁
+	//乐观锁，数据库中也需要重新添加列
 	private int version;
 	
 	public int getId() {
@@ -20,7 +20,7 @@ public class User {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public long getAge() {
+	public int getAge() {
 		return age;
 	}
 	public void setAge(int age) {
